@@ -257,11 +257,6 @@ export default function App() {
 
   // Remove player from lobby
   const deletePlayer = (id: string) => {
-    if (players.length <= 3) {
-      // Must have at least 3 players
-      playDelete();
-      return;
-    }
     setPlayers(players.filter(p => p.id !== id));
     playDelete();
   };
@@ -360,26 +355,104 @@ export default function App() {
     setScreen('result');
   };
 
-  // Grid style variables for a striking theme
-  const darkGridStyle = {
-    background: 'radial-gradient(circle at 0% 0%, #1a1b2e 0%, #0d0d12 100%), radial-gradient(circle at 100% 100%, #2d1b33 0%, transparent 50%)'
+  // Grid style variables with different exciting color profiles for each screen
+  const getScreenBackground = () => {
+    switch (screen) {
+      case 'home':
+        return {
+          background: 'radial-gradient(circle at 10% 20%, #15103a 0%, #060512 100%), radial-gradient(circle at 90% 80%, #4c007d 0%, transparent 55%)'
+        };
+      case 'players':
+        return {
+          background: 'radial-gradient(circle at 80% 10%, #0c183a 0%, #030612 100%), radial-gradient(circle at 10% 90%, #02385c 0%, transparent 60%)'
+        };
+      case 'settings':
+        return {
+          background: 'radial-gradient(circle at 15% 85%, #2a0b38 0%, #080310 100%), radial-gradient(circle at 85% 15%, #182b4f 0%, transparent 60%)'
+        };
+      case 'categories':
+        return {
+          background: 'radial-gradient(circle at 50% 10%, #100f35 0%, #040410 100%), radial-gradient(circle at 50% 90%, #3e125c 0%, transparent 60%)'
+        };
+      case 'pass':
+        return {
+          background: 'radial-gradient(circle at 10% 20%, #2e082c 0%, #09020a 100%), radial-gradient(circle at 90% 80%, #0b2245 0%, transparent 55%)'
+        };
+      case 'reveal':
+        return {
+          background: 'radial-gradient(circle at 90% 10%, #220a3a 0%, #07020d 100%), radial-gradient(circle at 10% 90%, #0e2942 0%, transparent 55%)'
+        };
+      case 'timer':
+        return {
+          background: 'radial-gradient(circle at 15% 50%, #3d0714 0%, #0f0205 100%), radial-gradient(circle at 85% 50%, #032b35 0%, transparent 60%)'
+        };
+      case 'voting':
+        return {
+          background: 'radial-gradient(circle at 50% 10%, #3a0026 0%, #0a000b 100%), radial-gradient(circle at 50% 90%, #0d254c 0%, transparent 60%)'
+        };
+      case 'result': {
+        const isImpostorCaught = votedPlayerId ? gameData.impostors.includes(votedPlayerId) : false;
+        if (isImpostorCaught) {
+          return {
+            background: 'radial-gradient(circle at 20% 20%, #033a25 0%, #01120b 100%), radial-gradient(circle at 80% 80%, #024b55 0%, transparent 55%)'
+          };
+        } else {
+          return {
+            background: 'radial-gradient(circle at 20% 20%, #4e0310 0%, #120104 100%), radial-gradient(circle at 80% 80%, #3b012c 0%, transparent 55%)'
+          };
+        }
+      }
+      default:
+        return {
+          background: 'radial-gradient(circle at 0% 0%, #1a1b2e 0%, #0d0d12 100%), radial-gradient(circle at 100% 100%, #2d1b33 0%, transparent 50%)'
+        };
+    }
   };
 
-  const gradientRedStyle = {
-    background: 'radial-gradient(circle at 0% 0%, #2e1a1c 0%, #0d0809 100%), radial-gradient(circle at 100% 100%, #40101b 0%, transparent 50%)'
+  const getGlowColors = () => {
+    switch (screen) {
+      case 'home':
+        return { top: 'bg-indigo-500/25', bottom: 'bg-pink-500/25' };
+      case 'players':
+        return { top: 'bg-cyan-500/25', bottom: 'bg-indigo-500/25' };
+      case 'settings':
+        return { top: 'bg-purple-500/25', bottom: 'bg-pink-500/25' };
+      case 'categories':
+        return { top: 'bg-violet-500/25', bottom: 'bg-emerald-500/20' };
+      case 'pass':
+        return { top: 'bg-fuchsia-500/25', bottom: 'bg-indigo-500/25' };
+      case 'reveal':
+        return { top: 'bg-purple-500/25', bottom: 'bg-cyan-500/25' };
+      case 'timer':
+        return { top: 'bg-red-500/25', bottom: 'bg-cyan-500/25' };
+      case 'voting':
+        return { top: 'bg-pink-500/25', bottom: 'bg-purple-500/25' };
+      case 'result': {
+        const isImpostorCaught = votedPlayerId ? gameData.impostors.includes(votedPlayerId) : false;
+        if (isImpostorCaught) {
+          return { top: 'bg-emerald-500/30', bottom: 'bg-teal-400/30' };
+        } else {
+          return { top: 'bg-red-500/30', bottom: 'bg-fuchsia-500/30' };
+        }
+      }
+      default:
+        return { top: 'bg-indigo-500/20', bottom: 'bg-purple-500/20' };
+    }
   };
+
+  const glows = getGlowColors();
 
   return (
     <div 
-      className="min-h-screen text-white font-sans flex flex-col justify-between transition-colors duration-500 overflow-x-hidden relative immersive-bg"
-      style={screen === 'result' ? gradientRedStyle : darkGridStyle}
+      className="min-h-screen text-white font-sans flex flex-col justify-between transition-all duration-700 overflow-x-hidden relative immersive-bg"
+      style={getScreenBackground()}
     >
       {/* Starry Dot Grid background overlay */}
       <div className="absolute inset-0 dot-grid opacity-25 pointer-events-none z-0"></div>
 
-      {/* Decorative Aurora glow effects */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[50%] rounded-full bg-indigo-500/10 blur-[130px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[130px] pointer-events-none"></div>
+      {/* Decorative Aurora glow effects - HIGHLY COLORFUL DYNAMIC ORBS */}
+      <div className={`absolute top-[-25%] left-[-15%] w-[70%] h-[55%] rounded-full ${glows.top} blur-[140px] pointer-events-none transition-all duration-1000`}></div>
+      <div className={`absolute bottom-[-15%] right-[-15%] w-[60%] h-[55%] rounded-full ${glows.bottom} blur-[140px] pointer-events-none transition-all duration-1000`}></div>
 
       {/* Global Header */}
       <header className="relative z-20 px-6 py-4 flex items-center justify-between border-b border-white/10 bg-black/15 backdrop-blur-md">
