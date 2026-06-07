@@ -1,0 +1,6 @@
+{
+  "name": "Jogo do Impostor",
+  "description": "Um jogo social divertido e dinâmico de mentiras e dedução, onde os jogadores tentam descobrir quem é o Impostor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
