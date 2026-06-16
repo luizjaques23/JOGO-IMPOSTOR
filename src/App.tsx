@@ -476,7 +476,7 @@ export default function App() {
 
   return (
     <div 
-      className="min-h-screen text-white font-sans flex flex-col justify-between transition-all duration-700 overflow-x-hidden relative immersive-bg"
+      className="min-[100dvh] text-white font-sans flex flex-col justify-between transition-all duration-700 overflow-x-hidden relative immersive-bg"
       style={getScreenBackground()}
     >
       {/* Starry Dot Grid background overlay */}
@@ -487,7 +487,7 @@ export default function App() {
       <div className={`absolute bottom-[-15%] right-[-15%] w-[60%] h-[55%] rounded-full ${glows.bottom} blur-[140px] pointer-events-none transition-all duration-1000`}></div>
 
       {/* Global Header */}
-      <header className="relative z-20 px-6 py-4 flex items-center justify-between border-b border-white/10 bg-black/15 backdrop-blur-md">
+      <header className="relative z-20 px-6 pt-safe pb-4 flex items-center justify-between border-b border-white/10 bg-black/15 backdrop-blur-md">
         <button
           onClick={() => {
             playTap();
@@ -535,7 +535,7 @@ export default function App() {
       </header>
 
       {/* Main Container with Screen Transitions */}
-      <main className="flex-1 max-w-md w-full mx-auto px-4 py-6 flex flex-col justify-center relative z-10">
+      <main className="flex-1 max-w-md w-full mx-auto px-4 py-4 flex flex-col justify-center relative z-10">
         <AnimatePresence mode="wait">
           
           {/* SCREEN: HOME */}
@@ -546,7 +546,7 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="flex flex-col items-center justify-center text-center py-6 space-y-8"
+              className="flex flex-col items-center justify-center text-center py-2 sm:py-6 space-y-4 sm:space-y-8"
             >
               {/* Animated Giant Logo */}
               <div className="relative">
@@ -580,7 +580,7 @@ export default function App() {
               </div>
 
               {/* Instructions overview to fill container gracefully */}
-              <div className="w-full glass-panel-glow-indigo max-w-sm rounded-[30px] p-6 text-left shadow-2xl relative">
+              <div className="w-full glass-panel-glow-indigo max-w-sm rounded-[24px] sm:rounded-[30px] p-4 sm:p-6 text-left shadow-2xl relative">
                 <div className="absolute top-0 right-0 w-20 h-20 bg-indigo-500/10 rounded-full blur-[25px] pointer-events-none"></div>
                 <h3 className="text-xs font-extrabold uppercase text-indigo-400 mb-1.5 flex items-center gap-1.5 font-display tracking-wider">
                   <Sparkles className="w-4 h-4 text-pink-400" />
@@ -600,7 +600,7 @@ export default function App() {
                     📲
                   </div>
                   <div className="flex-1">
-                    <span className="text-[10px] font-black text-purple-400 tracking-[0.15em] uppercase block font-display">INSTALAR NO CELULAR (PWA)</span>
+                    <span className="text-[10px] font-black text-purple-400 tracking-[0.15em] uppercase block font-display">INSTALAR NO SEU CELULAR</span>
                     <span className="text-[11px] text-slate-300 font-sans font-medium mt-0.5 block leading-relaxed">
                       Jogue em tela cheia como um aplicativo de verdade sem barras no Android e iPhone!
                     </span>
@@ -1305,11 +1305,11 @@ export default function App() {
                 const convictedPlayers = players.filter(p => gameData.impostors.includes(p.id));
 
                 return (
-                  <div className="w-full max-w-sm space-y-8 glass-panel rounded-[30px] p-8 shadow-3xl text-center relative overflow-hidden backdrop-blur-md">
+                  <div className="w-full max-w-sm space-y-6 sm:space-y-8 glass-panel rounded-[24px] sm:rounded-[30px] p-5 sm:p-8 shadow-3xl text-center relative overflow-hidden backdrop-blur-md">
                     {/* Glowing colored aura background */}
                     <div className={`absolute top-0 right-0 w-36 h-36 rounded-full blur-[65px] pointer-events-none -mr-12 -mt-12 opacity-60 ${isImpostorCaught ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}></div>
 
-                    <div className="text-[6.5rem] select-none leading-none pt-4 drop-shadow-[0_15px_15px_rgba(0,0,0,0.3)]">
+                    <div className="text-6xl sm:text-[6.5rem] select-none leading-none pt-2 sm:pt-4 drop-shadow-[0_15px_15px_rgba(0,0,0,0.3)]">
                       {isImpostorCaught ? '🎉' : '😈'}
                     </div>
 
@@ -1323,19 +1323,19 @@ export default function App() {
                     </div>
 
                     {/* Word revealing details metrics */}
-                    <div className="space-y-3 pt-6 border-t border-white/10">
+                    <div className="space-y-3 pt-4 sm:pt-6 border-t border-white/10">
                       
-                      <div className="bg-black/35 rounded-xl p-4.5 border border-white/5 shadow-inner">
-                        <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-widest block mb-1 font-mono">
+                      <div className="bg-black/35 rounded-xl p-3 sm:p-4.5 border border-white/5 shadow-inner">
+                        <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-widest block mb-0.5 sm:mb-1 font-mono">
                           {selectedTranslation.secretWordLabel}
                         </span>
-                        <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 font-display tracking-wider">
+                        <span className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 font-display tracking-wider">
                           {gameData.secretWord[lang]}
                         </span>
                       </div>
                       
-                      <div className="bg-black/35 rounded-xl p-4.5 border border-white/5 shadow-inner">
-                        <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-widest block mb-2.5 font-mono">
+                      <div className="bg-black/35 rounded-xl p-3 sm:p-4.5 border border-white/5 shadow-inner">
+                        <span className="text-[10px] text-slate-500 uppercase font-extrabold tracking-widest block mb-2 sm:mb-2.5 font-mono">
                           {selectedTranslation.impostorNamesLabel}
                         </span>
                         <div className="flex flex-wrap items-center justify-center gap-2">
@@ -1389,7 +1389,7 @@ export default function App() {
       />
 
       {/* Humble Footer note */}
-      <footer className="relative z-10 py-5 text-center text-[9px] font-mono tracking-[0.25em] text-indigo-400/30 uppercase border-t border-white/10 bg-black/10 backdrop-blur-md shrink-0 select-none">
+      <footer className="relative z-10 pt-5 pb-safe text-center text-[9px] font-mono tracking-[0.25em] text-indigo-400/30 uppercase border-t border-white/10 bg-black/10 backdrop-blur-md shrink-0 select-none">
         CRIADO POR L.J 🔒
       </footer>
     </div>
