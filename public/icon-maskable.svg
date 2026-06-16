@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Definitions of gradients and glow filters -->
+  <defs>
+    <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#1b124a" />
+      <stop offset="100%" stop-color="#05030f" />
+    </radialGradient>
+    <linearGradient id="neon-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007f" />
+      <stop offset="100%" stop-color="#aa00ff" />
+    </linearGradient>
+    <linearGradient id="neon-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffff" />
+      <stop offset="100%" stop-color="#0066ff" />
+    </linearGradient>
+    <filter id="glow-heavy" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glow-subtle" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Maskable background container (MUST be square rx=0, no rounded corners, to allow browser masking) -->
+  <rect width="512" height="512" rx="0" fill="url(#bg-glow)"/>
+
+  <!-- Centered Scaled Content (Scaled down slightly to fit the PWA 65% safe-zone circle) -->
+  <g transform="translate(38, 38) scale(0.85)">
+    <!-- Starry sparkles background layout -->
+    <g opacity="0.65">
+      <circle cx="100" cy="120" r="3" fill="#ffffff" />
+      <circle cx="410" cy="80" r="4" fill="#00ffff" filter="url(#glow-subtle)" />
+      <circle cx="430" cy="400" r="2.5" fill="#ffffff" />
+      <circle cx="80" cy="370" r="3.5" fill="#ff007f" filter="url(#glow-subtle)" />
+      <path d="M 256 50 L 260 60 L 270 63 L 260 66 L 256 76 L 252 66 L 242 63 L 252 60 Z" fill="#ffffff" opacity="0.5"/>
+    </g>
+
+    <!-- Eye of the Impostor in a Keyhole Outer frame -->
+    <path d="M 256 160 C 220 160 192 188 192 224 C 192 250 207 271 228 281 L 210 370 C 208 378 214 384 222 384 L 290 384 C 298 384 304 378 302 370 L 284 281 C 305 271 320 250 320 224 C 320 188 292 160 256 160 Z" 
+          fill="none" stroke="url(#neon-pink)" stroke-width="12" filter="url(#glow-heavy)" stroke-linejoin="round" />
+
+    <!-- Hidden Inner Detective Silhouette and glowing eye -->
+    <path d="M 170 215 L 342 215 C 350 215 350 205 340 205 L 315 205 L 305 165 C 302 155 292 150 280 150 L 232 150 C 220 150 210 155 207 165 L 197 205 L 172 205 C 162 205 162 215 170 215 Z" 
+          fill="url(#neon-cyan)" filter="url(#glow-subtle)"/>
+
+    <!-- Glowing eye representer -->
+    <ellipse cx="256" cy="245" rx="35" ry="16" fill="#05030f" stroke="#00ffff" stroke-width="4.5" filter="url(#glow-subtle)"/>
+    <circle cx="256" cy="245" r="11" fill="#ff007f" filter="url(#glow-heavy)"/>
+    <circle cx="252" cy="241" r="3.5" fill="#ffffff"/>
+  </g>
+</svg>

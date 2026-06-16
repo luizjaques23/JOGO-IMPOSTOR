@@ -192,6 +192,38 @@ export default function App() {
   const [votedPlayerId, setVotedPlayerId] = useState<string | null>(null);
   const [startingPlayerId, setStartingPlayerId] = useState<string | null>(null);
 
+  // PWA installation states
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+  const [showInstallBtn, setShowInstallBtn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setShowInstallBtn(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallBtn(false);
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!installPrompt) return;
+    playTap();
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    console.log(`User response to install: ${outcome}`);
+    setInstallPrompt(null);
+    setShowInstallBtn(false);
+  };
+
   const selectedTranslation = TRANSLATIONS[lang];
   const startingPlayer = players.find(p => p.id === startingPlayerId);
 
@@ -557,6 +589,50 @@ export default function App() {
                 <p className="text-xs text-slate-350 leading-relaxed font-sans font-medium">
                   {selectedTranslation.explanationDesc}
                 </p>
+              </div>
+
+              {/* PWA App Installation Guidance Card */}
+              <div className="w-full max-w-sm rounded-[24px] p-4 bg-gradient-to-br from-indigo-950/40 via-purple-950/30 to-black/40 border border-indigo-500/20 shadow-xl relative overflow-hidden text-left">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/15 rounded-full blur-[40px] pointer-events-none"></div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-xl shrink-0">
+                    📲
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-[10px] font-black text-purple-400 tracking-[0.15em] uppercase block font-display">INSTALAR NO CELULAR (PWA)</span>
+                    <span className="text-[11px] text-slate-300 font-sans font-medium mt-0.5 block leading-relaxed">
+                      Jogue em tela cheia como um aplicativo de verdade sem barras no Android e iPhone!
+                    </span>
+                  </div>
+                </div>
+
+                {showInstallBtn ? (
+                  <button
+                    onClick={handleInstallClick}
+                    className="mt-3 w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-extrabold text-[10px] tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-white" />
+                    <span>INSTALAR AGORA</span>
+                  </button>
+                ) : (
+                  <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/5 pt-3">
+                    <div className="text-[10px] text-indigo-300 flex items-start gap-1.5 leading-tight bg-white/[0.02] rounded-lg p-2">
+                      <span className="text-base leading-none">🤖</span>
+                      <div>
+                        <strong className="block text-white mb-0.5">Android:</strong>
+                        Toque em <span className="text-indigo-400 font-bold">⋮</span> e escolha <span className="text-indigo-400 font-bold">Instalar</span>.
+                      </div>
+                    </div>
+                    <div className="text-[10px] text-purple-300 flex items-start gap-1.5 leading-tight bg-white/[0.02] rounded-lg p-2">
+                      <span className="text-base leading-none">🍎</span>
+                      <div>
+                        <strong className="block text-white mb-0.5">iPhone:</strong>
+                        Toque em <span className="text-purple-400 font-bold">Compartilhar</span> e depois em <span className="text-purple-400 font-bold">Adicionar</span>.
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Game Launch Control - Styled like the 'Initiate Jump' button */}
