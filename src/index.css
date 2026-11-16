@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 /* Ensure proper safe-area-inset and dynamic heights on iOS/Android */
@@ -13,64 +13,121 @@ html, body, #root {
   min-height: 100dvh;
   margin: 0;
   padding: 0;
+  background-color: #07080f;
+  color: #f8fafc;
   overflow-x: hidden;
-  -webkit-tap-highlight-color: transparent; /* Disable gray tap highlight on mobile Safari */
-  user-select: none; /* Avoid accidental text highlighting during hold action */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
   -webkit-user-select: none;
-  touch-action: manipulation; /* Prevents double-tap to zoom behavior lag */
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom background from Immersive UI */
+input, textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Noir Investigation Surfaces */
 .immersive-bg {
-  background: radial-gradient(circle at 0% 0%, #1a1b2e 0%, #0d0d12 100%), radial-gradient(circle at 100% 100%, #2d1b33 0%, transparent 50%);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(34, 211, 238, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(244, 63, 94, 0.08) 0%, transparent 45%),
+    #07080f;
+}
+
+.noir-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 .dot-grid {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 0.5px, transparent 0.5px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(226, 232, 240, 0.1) 0.75px, transparent 0.75px);
+  background-size: 22px 22px;
 }
 
-/* Glass panel styled as the Aether dashboard */
+/* Glass Dossier Panels */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(180deg, rgba(19, 25, 42, 0.78) 0%, rgba(11, 14, 26, 0.88) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
-.glass-panel-glow-indigo {
-  background: rgba(99, 102, 241, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(99, 102, 241, 0.15);
-  box-shadow: 0 0 40px rgba(99, 102, 241, 0.05);
+.glass-panel-cyan {
+  background: linear-gradient(180deg, rgba(14, 30, 48, 0.8) 0%, rgba(9, 15, 28, 0.9) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(56, 189, 248, 0.14),
+    0 18px 45px rgba(8, 47, 73, 0.35);
 }
 
-.glass-panel-glow-purple {
-  background: rgba(168, 85, 247, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(168, 85, 247, 0.15);
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.05);
+.glass-panel-crimson {
+  background: linear-gradient(180deg, rgba(44, 13, 24, 0.82) 0%, rgba(19, 7, 14, 0.92) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 63, 94, 0.16),
+    0 18px 45px rgba(76, 5, 25, 0.45);
 }
 
-.glass-panel-glow-red {
-  background: rgba(239, 68, 68, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.05);
+.glass-panel-amber {
+  background: linear-gradient(180deg, rgba(40, 26, 10, 0.8) 0%, rgba(18, 12, 6, 0.9) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 158, 11, 0.14),
+    0 16px 40px rgba(69, 26, 3, 0.35);
 }
 
-/* Custom glow animations and keyframes */
+.glass-panel-emerald {
+  background: linear-gradient(180deg, rgba(10, 38, 30, 0.82) 0%, rgba(6, 18, 16, 0.92) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(16, 185, 129, 0.16),
+    0 18px 45px rgba(6, 78, 59, 0.4);
+}
+
+/* Custom Animations (GPU-friendly) */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
-    border-color: rgba(99, 102, 241, 0.15);
+    opacity: 0.55;
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
-    border-color: rgba(99, 102, 241, 0.3);
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(400%);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -78,25 +135,34 @@ html, body, #root {
   animation: pulse-glow 4s infinite ease-in-out;
 }
 
-/* Hidden scrollbars elegantly or style them */
+.animate-scanline {
+  animation: scanline 3.2s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+/* Refined scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 99px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(148, 163, 184, 0.35);
 }
 
+/* Safe area helpers for iOS notch / Dynamic Island & Android gesture bar */
 .pt-safe {
-  padding-top: calc(env(safe-area-inset-top) + 1rem) !important;
+  padding-top: max(0.75rem, env(safe-area-inset-top));
 }
 .pb-safe {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem) !important;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
-

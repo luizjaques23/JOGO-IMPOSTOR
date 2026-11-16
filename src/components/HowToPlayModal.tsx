@@ -1,79 +1,77 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, BookOpen, AlertCircle, HelpCircle, Users, CheckCircle } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
 import { playTap } from '../utils/audio';
+import { Language } from '../types';
 
 interface HowToPlayModalProps {
   isOpen: boolean;
   onClose: () => void;
-  lang: 'pt' | 'en';
+  lang: Language;
 }
 
 export default function HowToPlayModal({ isOpen, onClose, lang }: HowToPlayModalProps) {
-  const content = {
+  const active = {
     pt: {
-      title: 'COMO JOGAR',
-      subtitle: 'Aprenda as regras básicas do JOGO DO IMPOSTOR em 1 minuto!',
-      close: 'Fechar',
+      title: 'MANUAL DO AGENTE',
+      subtitle: 'Entenda a estratégia do IMPOSTOR em 5 passos rápidos',
+      close: 'ENTENDIDO',
       steps: [
         {
-          title: '1. Prepare o Grupo 👥',
-          desc: 'Adicione pelo menos 3 amigos e escolha uma categoria de palavras para iniciar a partida.'
+          title: '1. Monte a Mesa',
+          desc: 'Adicione pelo menos 3 jogadores (5+ para jogar com 2 Impostores) e ajuste dificuldade, tempo e modo de votação.'
         },
         {
-          title: '2. Olhe a sua Tela em Segredo 🤫',
-          desc: 'Passe o celular para cada um. Os inocentes verão a Palavra Secreta (ex: "Pizza"). O Impostor receberá só uma dica simples de associação (ex: "Fatia").'
+          title: '2. Dossiê Secreto',
+          desc: 'Passe o aparelho. Inocentes veem a Palavra Secreta. O Impostor vê apenas a Categoria e uma pista sutil para blefar.'
         },
         {
-          title: '3. Perguntas e Deduções 💬',
-          desc: 'O relógio corre! Cada um faz uma pergunta discreta ou diz uma palavra que descreva seu segredo. O Impostor deve fingir que sabe a palavra, usando seu raciocínio para se misturar!'
+          title: '3. Perguntas Estratégicas',
+          desc: 'Durante o timer, use as Perguntas Táticas da tela! Evite pistas óbvias demais para não entregar o segredo ao Impostor.'
         },
         {
-          title: '4. A Votação Final 🗳️',
-          desc: 'Terminado o tempo, debatam! Apontem e votem em quem agiu de forma mais suspeita ou gaguejou na explicação.'
+          title: '4. Votação (1 ou 2 Suspeitos)',
+          desc: 'Com 1 Impostor, vote em 1 suspeito. Com 2 Impostores, cada voto escolhe 2 suspeitos diferentes antes de confirmar!'
         },
         {
-          title: '5. Revelação e Vitória 🏆',
-          desc: 'Se o Impostor for desmascarado, os inocentes vencem! Estudem o segredo e tentem descobrir o farsante no próximo turno.'
+          title: '5. Desmascaramento',
+          desc: 'Descubra todos os impostores para conquistar a vitória total. Com 2 impostores, pegar apenas 1 gera vitória parcial!'
         }
       ]
     },
     en: {
-      title: 'HOW TO PLAY',
-      subtitle: 'Learn the basic rules of JOGO DO IMPOSTOR in 1 minute!',
-      close: 'Close',
+      title: 'AGENT FIELD MANUAL',
+      subtitle: 'Learn IMPOSTOR strategy in 5 quick steps',
+      close: 'GOT IT',
       steps: [
         {
-          title: '1. Prepare your Crew 👥',
-          desc: 'Add at least 3 friends and pick a word category to initiate the match.'
+          title: '1. Assemble the Table',
+          desc: 'Add at least 3 players (5+ for 2 Impostors) and choose difficulty, timer, and voting mode.'
         },
         {
-          title: '2. Look at your Screen in Secret 🤫',
-          desc: 'Pass the device around. Innocent players will see the Secret Word (e.g. "Pizza"). The Imposter will only see a vague hint (e.g. "Italy").'
+          title: '2. Secret Dossier',
+          desc: 'Pass the phone around. Innocents see the Secret Word. The Impostor only sees the Category and a subtle clue.'
         },
         {
-          title: '3. Questions & Deceptions 💬',
-          desc: 'The timer is ticking! Take turns asking questions or speaking words related to your secret. The Imposter must blend in and guess the secret context using the hint!'
+          title: '3. Strategic Questions',
+          desc: 'Use the built-in Tactical Questions during discussion! Avoid obvious clues that hand the word to the Impostor.'
         },
         {
-          title: '4. The Final Vote 🗳️',
-          desc: 'When time is up, deliberate! Point and submit your vote on who acted most suspiciously or stumbled during their description.'
+          title: '4. Voting (1 or 2 Suspects)',
+          desc: 'With 1 Impostor, vote for 1 suspect. With 2 Impostors, pick 2 different suspects before confirming!'
         },
         {
-          title: '5. Reveal & Ultimate Victory 🏆',
-          desc: 'If the group successfully catches the Imposter, Innocents win! Otherwise, the Impostor slips away as the victor.'
+          title: '5. Reveal & Verdict',
+          desc: 'Unmask every impostor for full victory. With 2 impostors, catching just 1 yields a partial victory!'
         }
       ]
     }
-  };
-
-  const active = content[lang];
+  }[lang];
 
   return (
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -85,56 +83,59 @@ export default function HowToPlayModal({ isOpen, onClose, lang }: HowToPlayModal
             className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
 
-          {/* Modal Card */}
           <motion.div
-            initial={{ scale: 0.9, y: 30, opacity: 0 }}
+            initial={{ scale: 0.92, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.9, y: 30, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="relative z-10 w-full max-w-lg bg-[#1F1F23] border border-white/10 rounded-[35px] shadow-3xl text-white flex flex-col max-h-[85vh] overflow-hidden"
+            exit={{ scale: 0.92, y: 20, opacity: 0 }}
+            transition={{ type: 'spring', damping: 26, stiffness: 360 }}
+            className="relative z-10 w-full max-w-md glass-panel rounded-[28px] text-white flex flex-col max-h-[85dvh] overflow-hidden"
           >
-            {/* Header */}
-            <div className="p-6 pb-4 border-b border-white/5 flex items-start justify-between">
+            <div className="p-5 pb-4 border-b border-white/10 flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-purple-400" />
-                  <h3 className="text-2xl font-black font-display tracking-tight text-white">{active.title}</h3>
+                  <BookOpen className="w-4 h-4 text-cyan-400" />
+                  <h3 className="text-lg font-bold font-display tracking-tight text-white">
+                    {active.title}
+                  </h3>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">{active.subtitle}</p>
+                <p className="text-xs text-slate-400 mt-1">{active.subtitle}</p>
               </div>
               <button
+                type="button"
                 onClick={() => {
                   playTap();
                   onClose();
                 }}
-                className="bg-white/10 hover:bg-white/20 text-gray-300 rounded-full p-2 transition-colors cursor-pointer"
+                className="bg-white/10 hover:bg-white/20 text-slate-300 rounded-full p-2 transition-colors cursor-pointer shrink-0"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Content (Scrollable list of steps) */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+            <div className="flex-1 overflow-y-auto p-5 space-y-3">
               {active.steps.map((step, idx) => (
-                <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 shadow-inner">
-                  <div className="flex flex-col space-y-1">
-                    <h4 className="text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-display">
-                      {step.title}
-                    </h4>
-                    <p className="text-sm text-gray-300 leading-relaxed font-sans">{step.desc}</p>
-                  </div>
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/8 space-y-1"
+                >
+                  <h4 className="text-sm font-bold font-display text-cyan-300">
+                    {step.title}
+                  </h4>
+                  <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                    {step.desc}
+                  </p>
                 </div>
               ))}
             </div>
 
-            {/* Footer */}
-            <div className="p-5 border-t border-white/5 bg-[#17171A] flex justify-end">
+            <div className="p-4 border-t border-white/10 bg-black/25 flex justify-end">
               <button
+                type="button"
                 onClick={() => {
                   playTap();
                   onClose();
                 }}
-                className="bg-white text-black font-black px-6 py-3 rounded-full hover:bg-gray-200 transition-transform active:scale-95 text-xs uppercase cursor-pointer"
+                className="w-full py-3.5 rounded-2xl bg-white text-slate-950 font-bold font-display hover:bg-cyan-300 transition-colors active:scale-98 text-xs uppercase tracking-[0.18em] cursor-pointer"
               >
                 {active.close}
               </button>

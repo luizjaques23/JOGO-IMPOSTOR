@@ -1,57 +1,93 @@
+export type Language = 'pt' | 'en';
+
+export type DifficultyLevel = 'balanced' | 'tactical' | 'mastermind';
+
+export type VotingMode = 'group' | 'individual';
+
+export type QuestionTag = 'psychological' | 'dilemma' | 'scenario' | 'bluff';
+
+export interface LocalizedText {
+  pt: string;
+  en: string;
+}
+
 export interface Player {
   id: string;
   name: string;
   color: string; // Tailwind class background
-  textColor: string; // Tailwind text color matching or white
+  textColor: string;
   emoji: string;
 }
 
 export interface WordItem {
-  word: {
-    pt: string;
-    en: string;
-  };
-  hint: {
-    pt: string;
-    en: string;
-  };
+  word: LocalizedText;
+  hint: LocalizedText;
+  difficulty: DifficultyLevel;
 }
 
 export interface Category {
   id: string;
-  name: {
-    pt: string;
-    en: string;
-  };
+  name: LocalizedText;
   icon: string;
-  desc: {
-    pt: string;
-    en: string;
-  };
+  desc: LocalizedText;
   color: string;
+  accentColor: string;
   words: WordItem[];
+}
+
+export interface StrategicQuestion {
+  id: string;
+  text: LocalizedText;
+  tag: QuestionTag;
+  difficulty: DifficultyLevel;
+  categories?: string[];
+}
+
+export interface TwistModifier {
+  id: string;
+  title: LocalizedText;
+  desc: LocalizedText;
+  icon: string;
 }
 
 export interface GameSettings {
   impostorCount: number;
   timeMinutes: number;
-  language: 'pt' | 'en';
+  language: Language;
+  difficulty: DifficultyLevel;
+  votingMode: VotingMode;
+  enableTwists: boolean;
 }
 
 export interface GameData {
-  categoryName: {
-    pt: string;
-    en: string;
-  };
-  secretWord: {
-    pt: string;
-    en: string;
-  };
-  secretHint: {
-    pt: string;
-    en: string;
-  };
+  categoryId: string;
+  categoryName: LocalizedText;
+  secretWord: LocalizedText;
+  secretHint: LocalizedText;
+  difficulty: DifficultyLevel;
   impostors: string[]; // List of Player IDs
+  twist: TwistModifier | null;
+  questions: StrategicQuestion[];
 }
 
-export type ScreenType = 'home' | 'players' | 'settings' | 'categories' | 'pass' | 'reveal' | 'timer' | 'voting' | 'result';
+export interface RoundOutcome {
+  status: 'full_victory' | 'partial_victory' | 'defeat';
+  accusedIds: string[];
+  caughtImpostorIds: string[];
+  missedImpostorIds: string[];
+  wronglyAccusedIds: string[];
+  voteCounts: Record<string, number>;
+  totalBallots: number;
+  votingMode: VotingMode;
+}
+
+export type ScreenType =
+  | 'home'
+  | 'players'
+  | 'settings'
+  | 'categories'
+  | 'pass'
+  | 'reveal'
+  | 'timer'
+  | 'voting'
+  | 'result';

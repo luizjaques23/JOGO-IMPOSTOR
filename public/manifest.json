@@ -1,12 +1,12 @@
 {
-  "name": "Jogo do Impostor",
+  "name": "IMPOSTOR",
   "short_name": "Impostor",
-  "description": "Um jogo social divertido e dinâmico de mentiras e dedução.",
+  "description": "Um jogo social de mistério, blefe e dedução estratégica.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#060512",
-  "theme_color": "#15103a",
+  "background_color": "#07080f",
+  "theme_color": "#07080f",
   "id": "/index.html",
   "scope": "/",
   "icons": [

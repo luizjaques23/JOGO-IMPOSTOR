@@ -1,5 +1,5 @@
 // Service worker for 'Jogo do Impostor'
-const CACHE_NAME = 'impostor-game-v1';
+const CACHE_NAME = 'impostor-game-v2';
 
 // Install event - cache core shell
 self.addEventListener('install', (e) => {

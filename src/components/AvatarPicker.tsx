@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Check } from 'lucide-react';
 import { playTap } from '../utils/audio';
+import { Language } from '../types';
 
 interface AvatarPickerProps {
   isOpen: boolean;
@@ -10,26 +11,26 @@ interface AvatarPickerProps {
   selectedEmoji: string;
   onSelectColor: (color: string) => void;
   onSelectEmoji: (emoji: string) => void;
-  lang: 'pt' | 'en';
+  lang: Language;
 }
 
 export const AVATAR_COLORS = [
-  'bg-[#FF3B30]', // Red
-  'bg-[#FF9500]', // Orange
-  'bg-[#FFCC00]', // Yellow
-  'bg-[#34C759]', // Green
-  'bg-[#5AC8FA]', // Teal 
-  'bg-[#007AFF]', // Blue
-  'bg-[#FF2D55]', // Pink
-  'bg-[#AF52DE]', // Purple
-  'bg-[#8E8E93]'  // Slate
+  'bg-rose-600',
+  'bg-orange-500',
+  'bg-amber-500',
+  'bg-emerald-600',
+  'bg-cyan-600',
+  'bg-blue-600',
+  'bg-indigo-600',
+  'bg-violet-600',
+  'bg-slate-600'
 ];
 
 export const AVATAR_EMOJIS = [
-  '🧘‍♀️', '🎸', '🕺', '🎧', '🦸‍♂️', '🧙‍♀️', '🧟‍♂️', '🧛‍♀️',
-  '🐱', '🐶', '🦊', '🐻', '🐼', '🐨', '🦄', '🦖',
-  '🐸', '🐙', '👾', '🚀', '🛸', '🍕', '🍔', '🌮',
-  '⚽', '🏀', '🎮', '💡', '🔥', '👑', '💎', '💀'
+  '🕵️', '🦊', '🦉', '🐺', '🐱', '🦁', '🐙', '🦅',
+  '🎭', '🃏', '🔮', '🗝️', '⚡', '🌙', '🔥', '💎',
+  '🧠', '👁️', '🕶️', '🛸', '🚀', '👾', '🎲', '🧭',
+  '🎸', '🎧', '👑', '💀', '🐉', '🦈', '🦄', '🦖'
 ];
 
 export default function AvatarPicker({
@@ -41,31 +42,27 @@ export default function AvatarPicker({
   onSelectEmoji,
   lang
 }: AvatarPickerProps) {
-  
-  const text = {
+  const active = {
     pt: {
-      title: 'Customizar Avatar',
-      subtitle: 'Escolha seu estilo visual e emoji',
-      colors: 'Cor do Fundo:',
-      emojis: 'Emoji do Personagem:',
-      done: 'Salvar'
+      title: 'Identidade do Agente',
+      subtitle: 'Escolha a cor do dossiê e seu emblema',
+      colors: 'Cor do Perfil',
+      emojis: 'Emblema',
+      done: 'SALVAR PERFIL'
     },
     en: {
-      title: 'Customize Avatar',
-      subtitle: 'Pick your background color and icon',
-      colors: 'Background Color:',
-      emojis: 'Character Emoji:',
-      done: 'Save'
+      title: 'Agent Identity',
+      subtitle: 'Pick your dossier color and emblem',
+      colors: 'Profile Color',
+      emojis: 'Emblem',
+      done: 'SAVE PROFILE'
     }
-  };
-
-  const active = text[lang];
+  }[lang];
 
   return (
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -74,29 +71,38 @@ export default function AvatarPicker({
               playTap();
               onClose();
             }}
-            className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
           />
 
-          {/* Modal Container */}
           <motion.div
-            initial={{ scale: 0.9, y: 30, opacity: 0 }}
+            initial={{ scale: 0.92, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.9, y: 30, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="relative z-10 w-full max-w-sm bg-[#1E1E22] border border-white/10 rounded-[35px] shadow-3xl text-white flex flex-col p-6"
+            exit={{ scale: 0.92, y: 20, opacity: 0 }}
+            transition={{ type: 'spring', damping: 26, stiffness: 360 }}
+            className="relative z-10 w-full max-w-sm glass-panel rounded-[28px] text-white flex flex-col p-5 sm:p-6 max-h-[85dvh]"
           >
-            {/* Header */}
-            <div className="flex justify-between items-start mb-5">
-              <div>
-                <h3 className="text-xl font-black font-display text-white">{active.title}</h3>
-                <p className="text-xs text-gray-400 mt-1">{active.subtitle}</p>
+            {/* Header + Live Preview */}
+            <div className="flex justify-between items-center mb-5">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-12 h-12 rounded-2xl ${selectedColor} flex items-center justify-center text-2xl border border-white/25 shadow-lg`}
+                >
+                  {selectedEmoji}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold font-display text-white leading-tight">
+                    {active.title}
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-0.5">{active.subtitle}</p>
+                </div>
               </div>
               <button
+                type="button"
                 onClick={() => {
                   playTap();
                   onClose();
                 }}
-                className="bg-white/10 hover:bg-white/20 text-gray-300 rounded-full p-1.5 transition-colors cursor-pointer"
+                className="bg-white/10 hover:bg-white/20 text-slate-300 rounded-full p-2 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -104,20 +110,23 @@ export default function AvatarPicker({
 
             {/* Color Grid */}
             <div className="mb-5">
-              <label className="text-xs uppercase tracking-wider font-extrabold text-gray-400 block mb-2">{active.colors}</label>
+              <label className="text-[10px] uppercase tracking-[0.18em] font-mono font-bold text-slate-400 block mb-2.5">
+                {active.colors}
+              </label>
               <div className="grid grid-cols-5 gap-2.5">
                 {AVATAR_COLORS.map((color) => (
                   <button
                     key={color}
+                    type="button"
                     onClick={() => {
                       playTap();
                       onSelectColor(color);
                     }}
-                    className={`h-9 w-9 rounded-xl flex items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-110 relative ${color}`}
+                    className={`h-10 rounded-xl flex items-center justify-center cursor-pointer transition-transform active:scale-90 border border-white/15 ${color}`}
                   >
                     {selectedColor === color && (
-                      <div className="bg-black/40 rounded-full p-0.5 text-white">
-                        <Check className="w-4 h-4" />
+                      <div className="bg-black/45 rounded-full p-1 text-white">
+                        <Check className="w-3.5 h-3.5" />
                       </div>
                     )}
                   </button>
@@ -126,17 +135,24 @@ export default function AvatarPicker({
             </div>
 
             {/* Emoji Grid */}
-            <div className="mb-6 flex-1 overflow-y-auto max-h-[160px]">
-              <label className="text-xs uppercase tracking-wider font-extrabold text-gray-400 block mb-2">{active.emojis}</label>
+            <div className="mb-5 flex-1 min-h-0 overflow-y-auto pr-1">
+              <label className="text-[10px] uppercase tracking-[0.18em] font-mono font-bold text-slate-400 block mb-2.5">
+                {active.emojis}
+              </label>
               <div className="grid grid-cols-6 gap-2">
                 {AVATAR_EMOJIS.map((emoji) => (
                   <button
                     key={emoji}
+                    type="button"
                     onClick={() => {
                       playTap();
                       onSelectEmoji(emoji);
                     }}
-                    className={`h-11 w-11 text-xl flex items-center justify-center rounded-xl cursor-pointer transition-transform duration-200 hover:scale-125 hover:bg-white/5 ${selectedEmoji === emoji ? 'bg-white/10 border border-white/20' : ''}`}
+                    className={`h-11 text-xl flex items-center justify-center rounded-xl cursor-pointer transition-all active:scale-90 ${
+                      selectedEmoji === emoji
+                        ? 'bg-cyan-500/20 border border-cyan-400/50 scale-105'
+                        : 'bg-white/[0.03] hover:bg-white/[0.08] border border-transparent'
+                    }`}
                   >
                     {emoji}
                   </button>
@@ -144,13 +160,13 @@ export default function AvatarPicker({
               </div>
             </div>
 
-            {/* Save Button */}
             <button
+              type="button"
               onClick={() => {
                 playTap();
                 onClose();
               }}
-              className="w-full py-4 rounded-[2rem] bg-white text-black font-black text-sm uppercase tracking-wider shadow-xl hover:bg-gray-200 transition-colors cursor-pointer"
+              className="w-full py-3.5 rounded-2xl bg-white text-slate-950 font-bold font-display text-xs uppercase tracking-[0.18em] shadow-xl hover:bg-cyan-300 transition-colors cursor-pointer"
             >
               {active.done}
             </button>
