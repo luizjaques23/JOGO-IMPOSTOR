@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Clock, Pause, Play, RefreshCw, Sparkles, Vote, Zap } from 'lucide-react';
-import { GameData, Language, Player, QuestionTag } from '../types';
+import React from 'react';
+import { motion } from 'motion/react';
+import { Clock, Pause, Play, Vote, Zap } from 'lucide-react';
+import { GameData, Language, Player } from '../types';
 import { playTap } from '../utils/audio';
 
 interface DiscussionTimerScreenProps {
@@ -15,29 +15,6 @@ interface DiscussionTimerScreenProps {
   onStartVoting: () => void;
 }
 
-const TAG_LABELS: Record<QuestionTag, { pt: string; en: string; style: string }> = {
-  psychological: {
-    pt: 'Psicológica',
-    en: 'Psychological',
-    style: 'text-violet-300 bg-violet-500/15 border-violet-400/25'
-  },
-  dilemma: {
-    pt: 'Dilema',
-    en: 'Dilemma',
-    style: 'text-amber-300 bg-amber-500/15 border-amber-400/25'
-  },
-  scenario: {
-    pt: 'Cenário',
-    en: 'Scenario',
-    style: 'text-cyan-300 bg-cyan-500/15 border-cyan-400/25'
-  },
-  bluff: {
-    pt: 'Teste de Blefe',
-    en: 'Bluff Test',
-    style: 'text-rose-300 bg-rose-500/15 border-rose-400/25'
-  }
-};
-
 export default function DiscussionTimerScreen({
   gameData,
   startingPlayer,
@@ -48,13 +25,8 @@ export default function DiscussionTimerScreen({
   onToggleTimer,
   onStartVoting
 }: DiscussionTimerScreenProps) {
-  const [questionIndex, setQuestionIndex] = useState(0);
-
-  const questions = gameData.questions;
-  const currentQuestion = questions.length > 0 ? questions[questionIndex % questions.length] : null;
-
   const progress = totalTimeSeconds > 0 ? Math.max(0, Math.min(1, timeLeft / totalTimeSeconds)) : 0;
-  const radius = 56;
+  const radius = 76;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - progress);
   const isUrgent = timeLeft <= 15;
@@ -70,28 +42,26 @@ export default function DiscussionTimerScreen({
 
   const t = {
     pt: {
-      title: 'INVESTIGAÇÃO',
-      subtitle: 'Use perguntas estratégicas para expor quem está blefando',
-      startsLabel: 'Começa perguntando',
-      twistBadge: 'Regra Especial da Rodada',
-      questionHeader: 'PERGUNTA ESTRATÉGICA',
-      nextQuestion: 'Trocar',
+      title: 'TEMPO DE DISCUSSÃO',
+      subtitle: 'Façam perguntas entre si até o tempo acabar para ir à votação',
+      startsLabel: 'Começa a rodada',
+      startsHint: 'Faz a primeira pergunta e a vez segue na roda',
       pause: 'PAUSAR',
       resume: 'RETOMAR',
       voteNow: 'VOTAR AGORA',
-      timeUp: 'TEMPO ESGOTADO!'
+      timeUp: 'TEMPO ESGOTADO!',
+      timeUpSub: 'Indo para a votação...'
     },
     en: {
-      title: 'INVESTIGATION',
-      subtitle: 'Use strategic questions to expose whoever is bluffing',
-      startsLabel: 'Starts asking',
-      twistBadge: 'Round Twist Rule',
-      questionHeader: 'STRATEGIC QUESTION',
-      nextQuestion: 'Next',
+      title: 'DISCUSSION TIME',
+      subtitle: 'Question each other until time runs out to start the vote',
+      startsLabel: 'Starts the round',
+      startsHint: 'Asks the first question and play moves around the table',
       pause: 'PAUSE',
       resume: 'RESUME',
       voteNow: 'VOTE NOW',
-      timeUp: "TIME'S UP!"
+      timeUp: "TIME'S UP!",
+      timeUpSub: 'Moving to voting...'
     }
   }[lang];
 
@@ -102,146 +72,119 @@ export default function DiscussionTimerScreen({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -14 }}
       transition={{ duration: 0.28 }}
-      className="flex flex-col w-full max-w-md mx-auto space-y-4 py-1"
+      className="flex flex-col items-center w-full max-w-md mx-auto space-y-5 py-2"
     >
       {/* Top Category & Title */}
       <div className="text-center space-y-1.5">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10">
-          <span className={`w-2 h-2 rounded-full ${isUrgent ? 'bg-rose-500 animate-ping' : 'bg-cyan-400 animate-pulse'}`} />
+          <span
+            className={`w-2 h-2 rounded-full ${
+              isUrgent ? 'bg-rose-500 animate-ping' : 'bg-cyan-400 animate-pulse'
+            }`}
+          />
           <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-slate-300">
             {gameData.categoryName[lang]} • {gameData.impostors.length}{' '}
-            {gameData.impostors.length === 1 ? 'Impostor' : lang === 'pt' ? 'Impostores' : 'Impostors'}
+            {gameData.impostors.length === 1
+              ? 'Impostor'
+              : lang === 'pt'
+                ? 'Impostores'
+                : 'Impostors'}
           </span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold font-display tracking-tight text-white uppercase">
           {isFinished ? t.timeUp : t.title}
         </h2>
-        <p className="text-xs text-slate-400 font-sans px-2">{t.subtitle}</p>
+        <p className="text-xs text-slate-400 font-sans px-2">
+          {isFinished ? t.timeUpSub : t.subtitle}
+        </p>
       </div>
 
-      {/* Compact Timer + Starting Player Row */}
-      <div className="grid grid-cols-[auto_1fr] gap-3 items-center glass-panel rounded-[24px] p-4">
-        {/* SVG Progress Ring */}
-        <div className="relative w-32 h-32 flex items-center justify-center shrink-0">
-          <svg className="w-32 h-32 -rotate-90" viewBox="0 0 128 128">
-            <circle
-              cx="64"
-              cy="64"
-              r={radius}
-              fill="none"
-              stroke="rgba(255,255,255,0.07)"
-              strokeWidth="7"
-            />
-            <circle
-              cx="64"
-              cy="64"
-              r={radius}
-              fill="none"
-              stroke={isUrgent ? '#f43f5e' : '#38bdf8'}
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              className="transition-all duration-700 ease-linear"
-            />
-          </svg>
-
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <Clock className={`w-3.5 h-3.5 mb-0.5 ${isUrgent ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`} />
-            <span className={`text-2xl font-bold font-mono tracking-tight ${isUrgent ? 'text-rose-400' : 'text-white'}`}>
-              {formatTime(timeLeft)}
+      {/* Starting Player Spotlight */}
+      {startingPlayer && (
+        <div className="w-full glass-panel-cyan rounded-[24px] p-4 flex items-center gap-3.5">
+          <div
+            className={`w-13 h-13 rounded-2xl ${startingPlayer.color} flex items-center justify-center text-2xl shrink-0 border border-white/25 shadow-lg`}
+          >
+            {startingPlayer.emoji}
+          </div>
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-cyan-300 font-bold block">
+              {t.startsLabel}
             </span>
-          </div>
-        </div>
-
-        {/* Who Starts + Twist Info */}
-        <div className="space-y-2.5 min-w-0">
-          {startingPlayer && (
-            <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-3 flex items-center gap-2.5">
-              <div
-                className={`w-10 h-10 rounded-xl ${startingPlayer.color} flex items-center justify-center text-xl shrink-0 border border-white/20`}
-              >
-                {startingPlayer.emoji}
-              </div>
-              <div className="min-w-0">
-                <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-cyan-300 block">
-                  {t.startsLabel}
-                </span>
-                <span className="text-sm font-bold font-display text-white truncate block">
-                  {startingPlayer.name}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {gameData.twist && (
-            <div className="rounded-2xl bg-amber-500/10 border border-amber-400/25 p-2.5">
-              <div className="flex items-center gap-1.5 text-[9px] font-mono uppercase tracking-[0.15em] text-amber-300 font-bold">
-                <Zap className="w-3 h-3 shrink-0" />
-                <span className="truncate">{gameData.twist.title[lang]}</span>
-              </div>
-              <p className="text-[11px] text-slate-300 leading-snug mt-1">
-                {gameData.twist.desc[lang]}
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Interactive Strategic Question Card */}
-      {currentQuestion && (
-        <div className="glass-panel-cyan rounded-[24px] p-4 sm:p-5 space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-[0.16em] text-cyan-300 font-bold">
-                <Sparkles className="w-3.5 h-3.5" />
-                {t.questionHeader}
-              </span>
-              <span
-                className={`text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-                  TAG_LABELS[currentQuestion.tag].style
-                }`}
-              >
-                {TAG_LABELS[currentQuestion.tag][lang]}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                playTap();
-                setQuestionIndex((prev) => prev + 1);
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 active:scale-95 text-[11px] font-display font-bold text-white transition-all cursor-pointer shrink-0"
-            >
-              <RefreshCw className="w-3.5 h-3.5 text-cyan-300" />
-              <span>{t.nextQuestion}</span>
-            </button>
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={currentQuestion.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.18 }}
-              className="text-sm sm:text-[15px] font-medium text-slate-100 leading-relaxed font-sans"
-            >
-              “{currentQuestion.text[lang]}”
-            </motion.p>
-          </AnimatePresence>
-
-          <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-0.5">
-            <span>
-              {(questionIndex % questions.length) + 1}/{questions.length}
+            <span className="text-lg font-bold font-display text-white truncate block">
+              {startingPlayer.name}
+            </span>
+            <span className="text-[11px] text-slate-400 block leading-snug">
+              {t.startsHint}
             </span>
           </div>
         </div>
       )}
 
+      {/* Large Radial Countdown Ring */}
+      <div className="relative w-52 h-52 sm:w-56 sm:h-56 flex items-center justify-center">
+        <div
+          className={`absolute inset-3 rounded-full border border-white/5 transition-opacity duration-500 ${
+            timerActive ? 'opacity-100' : 'opacity-40'
+          }`}
+        />
+
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 180 180">
+          <circle
+            cx="90"
+            cy="90"
+            r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.07)"
+            strokeWidth="9"
+          />
+          <circle
+            cx="90"
+            cy="90"
+            r={radius}
+            fill="none"
+            stroke={isUrgent ? '#f43f5e' : '#38bdf8'}
+            strokeWidth="9"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            className="transition-all duration-700 ease-linear"
+          />
+        </svg>
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <Clock
+            className={`w-4 h-4 mb-1 ${
+              isUrgent ? 'text-rose-400 animate-pulse' : 'text-slate-400'
+            }`}
+          />
+          <span
+            className={`text-4xl font-bold font-mono tracking-tight ${
+              isUrgent ? 'text-rose-400' : 'text-white'
+            }`}
+          >
+            {formatTime(timeLeft)}
+          </span>
+        </div>
+      </div>
+
+      {/* Optional Round Twist Rule */}
+      {gameData.twist && (
+        <div className="w-full rounded-2xl bg-amber-500/10 border border-amber-400/25 p-3 flex items-start gap-2.5">
+          <Zap className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
+          <div className="min-w-0">
+            <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-amber-300 font-bold block">
+              {gameData.twist.title[lang]}
+            </span>
+            <p className="text-xs text-slate-300 leading-snug mt-0.5">
+              {gameData.twist.desc[lang]}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Action Controls */}
-      <div className="flex gap-3 pt-1">
+      <div className="w-full flex gap-3 pt-1">
         <motion.button
           whileTap={{ scale: 0.97 }}
           type="button"

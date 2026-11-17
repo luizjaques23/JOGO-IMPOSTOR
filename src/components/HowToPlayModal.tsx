@@ -26,8 +26,8 @@ export default function HowToPlayModal({ isOpen, onClose, lang }: HowToPlayModal
           desc: 'Passe o aparelho. Inocentes veem a Palavra Secreta. O Impostor vê apenas a Categoria e uma pista sutil para blefar.'
         },
         {
-          title: '3. Perguntas Estratégicas',
-          desc: 'Durante o timer, use as Perguntas Táticas da tela! Evite pistas óbvias demais para não entregar o segredo ao Impostor.'
+          title: '3. Discussão no Tempo',
+          desc: 'Um jogador sorteado começa! Vocês fazem perguntas entre si até o tempo acabar para tentar descobrir quem está blefando.'
         },
         {
           title: '4. Votação (1 ou 2 Suspeitos)',
@@ -53,8 +53,8 @@ export default function HowToPlayModal({ isOpen, onClose, lang }: HowToPlayModal
           desc: 'Pass the phone around. Innocents see the Secret Word. The Impostor only sees the Category and a subtle clue.'
         },
         {
-          title: '3. Strategic Questions',
-          desc: 'Use the built-in Tactical Questions during discussion! Avoid obvious clues that hand the word to the Impostor.'
+          title: '3. Timed Discussion',
+          desc: 'A randomly chosen player starts! Ask each other questions until time runs out to uncover who is bluffing.'
         },
         {
           title: '4. Voting (1 or 2 Suspects)',

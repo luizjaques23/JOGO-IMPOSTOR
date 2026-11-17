@@ -56,7 +56,7 @@ const TRANSLATIONS = {
     brand: 'IMPOSTOR',
     subtitle: 'Mistério • Blefe • Dedução',
     heroDesc:
-      'Os agentes recebem a Palavra Secreta. Os impostores recebem apenas uma pista sutil — e precisam sobreviver às perguntas estratégicas sem serem desmascarados.',
+      'Os agentes recebem a Palavra Secreta. Os impostores recebem apenas uma pista sutil — e precisam sobreviver ao debate sem serem desmascarados.',
     playNow: 'INICIAR PARTIDA',
     readyCrew: (n: number) => `Mesa salva: ${n} jogadores`,
     playersTitle: 'MESA DE AGENTES',
@@ -102,7 +102,7 @@ const TRANSLATIONS = {
     muteTooltip: 'Ativar/desativar som',
     feature1Title: '180+ Desafios',
     feature1Desc: '3 níveis táticos',
-    feature2Title: 'Perguntas Guia',
+    feature2Title: 'Pistas Sutis',
     feature2Desc: 'Anti-óbvio',
     feature3Title: 'Voto Duplo',
     feature3Desc: 'Para 2 impostores'
@@ -112,7 +112,7 @@ const TRANSLATIONS = {
     brand: 'IMPOSTOR',
     subtitle: 'Mystery • Bluff • Deduction',
     heroDesc:
-      'Agents receive the Secret Word. Impostors receive only a subtle clue — and must survive strategic questioning without blowing their cover.',
+      'Agents receive the Secret Word. Impostors receive only a subtle clue — and must survive the table debate without blowing their cover.',
     playNow: 'START MATCH',
     readyCrew: (n: number) => `Saved table: ${n} players`,
     playersTitle: 'AGENT TABLE',
@@ -158,8 +158,8 @@ const TRANSLATIONS = {
     muteTooltip: 'Toggle sound',
     feature1Title: '180+ Prompts',
     feature1Desc: '3 tactical tiers',
-    feature2Title: 'Smart Questions',
-    feature2Desc: 'Non-obvious clues',
+    feature2Title: 'Subtle Clues',
+    feature2Desc: 'Non-obvious',
     feature3Title: 'Dual Voting',
     feature3Desc: 'For 2 impostors'
   }
@@ -211,6 +211,7 @@ export default function App() {
   const [turnIndex, setTurnIndex] = useState<number>(0);
   const [timeLeft, setTimeLeft] = useState<number>(120);
   const [timerActive, setTimerActive] = useState<boolean>(false);
+  const [timerExpired, setTimerExpired] = useState<boolean>(false);
   const [startingPlayerId, setStartingPlayerId] = useState<string | null>(null);
   const [roundOutcome, setRoundOutcome] = useState<RoundOutcome | null>(null);
 
@@ -253,9 +254,10 @@ export default function App() {
 
   // Game timer loop
   useEffect(() => {
-    if (!timerActive || timeLeft <= 0) return;
+    if (!timerActive) return;
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
+        if (prev <= 0) return 0;
         const nextVal = prev - 1;
         if (nextVal <= 10 && nextVal > 0) {
           playTick(true);
@@ -264,13 +266,24 @@ export default function App() {
         }
         if (nextVal === 0) {
           setTimerActive(false);
+          setTimerExpired(true);
           playAlarm();
         }
         return nextVal;
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+  }, [timerActive]);
+
+  // Automatically proceed to voting shortly after the timer runs out
+  useEffect(() => {
+    if (!timerExpired || screen !== 'timer') return;
+    const timeout = setTimeout(() => {
+      setTimerExpired(false);
+      setScreen('voting');
+    }, 1200);
+    return () => clearTimeout(timeout);
+  }, [timerExpired, screen]);
 
   const t = TRANSLATIONS[lang];
   const startingPlayer = players.find((p) => p.id === startingPlayerId);
@@ -373,6 +386,7 @@ export default function App() {
       setStartingPlayerId(null);
     }
     setTimeLeft(settings.timeMinutes * 60);
+    setTimerExpired(false);
     setTimerActive(true);
     setScreen('timer');
   };
@@ -380,6 +394,7 @@ export default function App() {
   const handleStartVoting = () => {
     playTap();
     setTimerActive(false);
+    setTimerExpired(false);
     setScreen('voting');
   };
 
@@ -399,6 +414,7 @@ export default function App() {
     playTap();
     if (screen === 'home') return;
     setTimerActive(false);
+    setTimerExpired(false);
     if (screen === 'players') setScreen('home');
     else if (screen === 'settings') setScreen('players');
     else if (screen === 'categories') setScreen('settings');
