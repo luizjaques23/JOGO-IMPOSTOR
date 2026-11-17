@@ -1202,7 +1202,7 @@ export default function App() {
       <footer className="relative z-10 py-2.5 pb-safe text-center text-[10px] font-mono tracking-[0.18em] text-slate-400 uppercase border-t border-white/[0.06] bg-[#07080f]/60 backdrop-blur-md shrink-0 select-none flex items-center justify-center gap-2">
         <span>CRIADO POR LUIZ JAQUES -</span>
         <a
-          href="https://instagram.com/luizjaques23"
+          href="https://www.instagram.com/luiz_jaques23?srtk=MW5pamVsYXJveG05aA%3D%3D&utm_source=qr"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-slate-300 hover:text-pink-400 transition-colors font-bold"
@@ -1221,7 +1221,7 @@ export default function App() {
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
           </svg>
-          <span>LUIZJAQUES23</span>
+          <span>LUIZ_JAQUES23</span>
         </a>
       </footer>
     </div>
