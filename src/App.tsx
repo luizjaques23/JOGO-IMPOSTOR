@@ -443,7 +443,7 @@ export default function App() {
     }
   };
 
-  const hideBackButton = screen === 'home' || screen === 'pass' || screen === 'reveal';
+  const hideBackButton = screen === 'home';
 
   return (
     <div className="min-h-[100dvh] h-[100dvh] text-slate-100 font-sans flex flex-col justify-between relative overflow-hidden immersive-bg">
@@ -470,7 +470,7 @@ export default function App() {
           }`}
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span className="hidden xs:inline">{t.back}</span>
+          <span>{t.back}</span>
         </button>
 
         {/* Centered Brand Wordmark */}
@@ -1099,6 +1099,7 @@ export default function App() {
                 gameData={gameData}
                 lang={lang}
                 onReadyToReveal={() => setScreen('reveal')}
+                onChangeCategory={() => setScreen('categories')}
                 onAdvanceTurn={() => {
                   if (turnIndex < players.length - 1) {
                     setTurnIndex((prev) => prev + 1);
@@ -1198,8 +1199,30 @@ export default function App() {
       />
 
       {/* Footer */}
-      <footer className="relative z-10 py-2.5 pb-safe text-center text-[9px] font-mono tracking-[0.22em] text-slate-500 uppercase border-t border-white/[0.06] bg-[#07080f]/60 backdrop-blur-md shrink-0 select-none">
-        IMPOSTOR • CRIADO POR L.J
+      <footer className="relative z-10 py-2.5 pb-safe text-center text-[10px] font-mono tracking-[0.18em] text-slate-400 uppercase border-t border-white/[0.06] bg-[#07080f]/60 backdrop-blur-md shrink-0 select-none flex items-center justify-center gap-2">
+        <span>CRIADO POR LUIZ JAQUES -</span>
+        <a
+          href="https://instagram.com/luizjaques23"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-slate-300 hover:text-pink-400 transition-colors font-bold"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-3.5 h-3.5 text-pink-400 shrink-0"
+            aria-hidden="true"
+          >
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+          </svg>
+          <span>LUIZJAQUES23</span>
+        </a>
       </footer>
     </div>
   );

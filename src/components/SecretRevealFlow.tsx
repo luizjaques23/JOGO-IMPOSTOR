@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Eye, EyeOff, Fingerprint, ShieldAlert, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Fingerprint, ShieldAlert, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import { GameData, Language, Player } from '../types';
 import { playReveal, playTap } from '../utils/audio';
 
@@ -13,6 +13,7 @@ interface SecretRevealFlowProps {
   lang: Language;
   onReadyToReveal: () => void;
   onAdvanceTurn: () => void;
+  onChangeCategory: () => void;
 }
 
 export default function SecretRevealFlow({
@@ -23,7 +24,8 @@ export default function SecretRevealFlow({
   gameData,
   lang,
   onReadyToReveal,
-  onAdvanceTurn
+  onAdvanceTurn,
+  onChangeCategory
 }: SecretRevealFlowProps) {
   const [isHolding, setIsHolding] = useState(false);
   const [hasPeeked, setHasPeeked] = useState(false);
@@ -80,7 +82,8 @@ export default function SecretRevealFlow({
       categoryLabel: 'Categoria',
       nextPlayerBtn: 'PRÓXIMO JOGADOR',
       startDiscussionBtn: 'INICIAR DISCUSSÃO',
-      peekFirstHint: 'Segure o cartão acima pelo menos uma vez para liberar'
+      peekFirstHint: 'Segure o cartão acima pelo menos uma vez para liberar',
+      changeThemeBtn: 'VOLTAR E TROCAR TEMA'
     },
     en: {
       dossierStep: `DOSSIER ${playerIndex + 1} OF ${totalPlayers}`,
@@ -101,7 +104,8 @@ export default function SecretRevealFlow({
       categoryLabel: 'Category',
       nextPlayerBtn: 'NEXT PLAYER',
       startDiscussionBtn: 'START DISCUSSION',
-      peekFirstHint: 'Hold the card above at least once to continue'
+      peekFirstHint: 'Hold the card above at least once to continue',
+      changeThemeBtn: 'BACK & CHANGE THEME'
     }
   }[lang];
 
@@ -145,17 +149,34 @@ export default function SecretRevealFlow({
           </p>
         </div>
 
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={() => {
-            playTap();
-            onReadyToReveal();
-          }}
-          className="w-full py-4 rounded-2xl bg-white text-slate-950 font-bold font-display text-xs tracking-[0.18em] uppercase shadow-[0_10px_30px_rgba(255,255,255,0.14)] hover:bg-cyan-300 transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
-        >
-          <Eye className="w-4 h-4" />
-          <span>{t.readyBtn}</span>
-        </motion.button>
+        <div className="w-full space-y-2.5">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            type="button"
+            onClick={() => {
+              playTap();
+              onReadyToReveal();
+            }}
+            className="w-full py-4 rounded-2xl bg-white text-slate-950 font-bold font-display text-xs tracking-[0.18em] uppercase shadow-[0_10px_30px_rgba(255,255,255,0.14)] hover:bg-cyan-300 transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
+          >
+            <Eye className="w-4 h-4" />
+            <span>{t.readyBtn}</span>
+          </motion.button>
+
+          <button
+            type="button"
+            onClick={() => {
+              playTap();
+              onChangeCategory();
+            }}
+            className="w-full py-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.09] border border-white/10 text-slate-300 font-display font-bold text-[11px] tracking-[0.15em] uppercase transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" />
+            <span>
+              {t.changeThemeBtn} ({gameData.categoryName[lang]})
+            </span>
+          </button>
+        </div>
       </motion.div>
     );
   }
@@ -327,6 +348,18 @@ export default function SecretRevealFlow({
             {t.peekFirstHint}
           </p>
         )}
+
+        <button
+          type="button"
+          onClick={() => {
+            playTap();
+            onChangeCategory();
+          }}
+          className="w-full py-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-slate-400 hover:text-white font-display font-bold text-[10px] tracking-[0.15em] uppercase transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <ArrowLeft className="w-3 h-3 text-cyan-300" />
+          <span>{t.changeThemeBtn}</span>
+        </button>
       </div>
     </motion.div>
   );
